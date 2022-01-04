@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 import asyncpg
+import ujson
+from fastapi.responses import UJSONResponse, ORJSONResponse
 
 app = FastAPI()
 
@@ -18,3 +20,24 @@ async def read_root():
             'SELECT * FROM "Post" LIMIT 100'
         )
         return values
+
+@app.get("/orjson")
+async def orjson():
+    global pool
+    async with pool.acquire() as conn:
+        values = await conn.fetch(
+            'SELECT * FROM "Post" LIMIT 100'
+        )
+        r = [dict(v) for v in values]
+        return ORJSONResponse(content=r)
+
+@app.get("/ujson")
+async def ujson():
+    global pool
+    async with pool.acquire() as conn:
+        values = await conn.fetch(
+            'SELECT * FROM "Post" LIMIT 100'
+        )
+        r = [dict(v) for v in values]
+        return UJSONResponse(content=r)
+
