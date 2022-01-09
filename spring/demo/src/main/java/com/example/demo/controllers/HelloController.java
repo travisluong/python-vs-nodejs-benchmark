@@ -18,10 +18,6 @@ public class HelloController {
     public List<Map<String, Object>> hello() {
         String sql = "SELECT * FROM \"Post\";";
         List<Map<String, Object>> queryForList = jdbcTemplate.queryForList(sql);
-        // System.out.println(queryForList);
-        // for (int i = 0; i < queryForList.size(); i++) {
-        //     System.out.println(queryForList.get(i));
-        // }
         return queryForList;
     }
 }
