@@ -1,9 +1,11 @@
-package com.example.demo.repositories;
+package com.example.demo.repositories.note;
 
-import com.example.demo.domain.Post;
+import com.example.demo.domain.note.Note;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface PostRepository extends PagingAndSortingRepository<Post, Long> {}
+public interface NoteRepository extends PagingAndSortingRepository<Note, Long> {
+    
+}

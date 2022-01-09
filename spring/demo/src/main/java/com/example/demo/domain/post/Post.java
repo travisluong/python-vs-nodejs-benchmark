@@ -1,4 +1,4 @@
-package com.example.demo.domain;
+package com.example.demo.domain.post;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Table(name="\"Post\"")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String content;
