@@ -1,9 +1,7 @@
 // Require the framework and instantiate it
-const fastify = require('fastify')({ logger: true })
+const fastify = require('fastify')({ logger: false })
 
 const { Pool, Client } = require('pg')
-const express = require('express')
-const app = express()
 const port = 3000
 const cluster = require('cluster');
 
@@ -27,7 +25,7 @@ if (cluster.isMaster) {
       
       // Declare a route
       fastify.get('/', async (request, reply) => {
-          const resp = await client.query('SELECT * FROM \"Post\" LIMIT 100');
+          const resp = await client.query(`SELECT * FROM "Post" LIMIT 100`);
           return resp.rows;
       //   return { hello: 'world' }
       })
