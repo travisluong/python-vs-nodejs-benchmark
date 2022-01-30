@@ -1,9 +1,7 @@
 // Require the framework and instantiate it
-const fastify = require('fastify')({ logger: true })
+const fastify = require('fastify')({ logger: false })
 
 const { Pool, Client } = require('pg')
-const express = require('express')
-const app = express()
 const port = 3000
 
 const client = new Client({
