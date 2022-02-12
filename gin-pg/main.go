@@ -1,30 +1,29 @@
 package main
 
 import (
-	"net/http"
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 	// "encoding/json"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
 
-
 const (
-	host     = "localhost"
-	port     = 5432
-	user     = "benchmark_user"
+	host = "localhost"
+	port = 5432
+	user = "benchmark_user"
 	// password = ""
-	dbname   = "benchmark_db"
-  )
+	dbname = "benchmark_db"
+)
 
 type Post struct {
-	Id int `json:"id"`
-	Title string `json:"title"`
-	Content string `json:"content"`
-	Published bool `json:"published"`
+	Id        int    `json:"id"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+	Published bool   `json:"published"`
 }
 
 type JsonResponse struct {
@@ -39,16 +38,18 @@ func setupRouter() *gin.Engine {
 	r := gin.Default()
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-	"dbname=%s sslmode=disable",
-	host, port, user, dbname)
+		"dbname=%s sslmode=disable",
+		host, port, user, dbname)
 
 	pg, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	r.GET("/hello", func(c *gin.Context) {
+	pg.SetMaxOpenConns(10000)
+	pg.SetMaxIdleConns(5000)
 
+	r.GET("/hello", func(c *gin.Context) {
 		rows, err := pg.Query("SELECT id, content FROM \"Post\" LIMIT 100;")
 		if err != nil {
 			log.Fatal(err)
@@ -69,7 +70,6 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "hello")
 	})
 
-
 	r.GET("/loadtest", func(c *gin.Context) {
 		rows, err := pg.Query("SELECT id, title, content, published FROM \"Post\" LIMIT 100;")
 		if err != nil {
@@ -77,7 +77,7 @@ func setupRouter() *gin.Engine {
 		}
 		defer rows.Close()
 		// log.Print(rows)
-		var posts = make([]Post, 0)
+		posts := make([]Post, 0)
 		for rows.Next() {
 			var Id int
 			var Title string
@@ -101,14 +101,12 @@ func setupRouter() *gin.Engine {
 		// log.Print(response)
 		// out, err := json.Marshal(posts)
 		// if err != nil {
-			// panic(err)
+		// panic(err)
 		// }
 		// log.Print(out)
 		// c.String(http.StatusOK, "hello")
 		c.JSON(http.StatusOK, gin.H{"posts": posts})
 	})
-
-
 
 	// Ping test
 	r.GET("/ping", func(c *gin.Context) {
