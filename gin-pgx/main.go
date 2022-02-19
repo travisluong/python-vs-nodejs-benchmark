@@ -39,7 +39,7 @@ func setupRouter() *gin.Engine {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer dbPool.Close()
+	// defer dbPool.Close()
 
 	r.GET("/hello", func(c *gin.Context) {
 		rows, err := dbPool.Query(context.Background(), "SELECT id, content FROM \"Post\" LIMIT 100;")
